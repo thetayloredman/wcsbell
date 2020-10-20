@@ -34,7 +34,7 @@ function ensureDir(p) {
 
     return f;
 }
-function ensureFile(p, c) {
+function ensureFile(p, d) {
     let c = '';
     try {
         c = fs.readFileSync(p, 'utf-8');
@@ -42,7 +42,7 @@ function ensureFile(p, c) {
         c = '';
         if (e.code === 'ENOENT') {
             try {
-                fs.writeFileSync(p, c);
+                fs.writeFileSync(p, d);
             } catch (e) {
                 console.error(e);
                 process.exit(1);
