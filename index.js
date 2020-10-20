@@ -28,5 +28,13 @@ const WEB_PORT = 8081;
     const app = new express();
     app.listen(8080, () => {
         console.log('Web server listening on port ' + WEB_PORT + '!');
+        let s = config.ensure('ready', false);
+        console.log('');
+        if (!s) {
+            console.log('');
+            console.log('[----- URGENT -----]');
+            console.log('You haven\'t set up WCSBell yet!');
+            console.log('Please go to "this.machine\'s.ip:8081/" and begin setup!')
+        }
     });
 })();
