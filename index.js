@@ -7,6 +7,9 @@ const fs = require('fs').promises;
 const express = require('express');
 const enmap = require('enmap');
 
+// Config
+const WEB_PORT = 8081;
+
 // Main
 (async () => {
     console.clear();
@@ -21,4 +24,9 @@ const enmap = require('enmap');
 
     // Post init
     console.log('Initialized!');
+    console.log('Initializing a web server on port ' + WEB_PORT + '...');
+    const app = new express();
+    app.listen(8080, () => {
+        console.log('Web server listening on port ' + WEB_PORT + '!');
+    });
 })();
