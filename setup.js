@@ -4,7 +4,7 @@ document.getElementById("root").innerHTML = `<h1>WCSBell Setup</h1>
     <h2>Current Status</h2>
     <div>
         <ol>
-            
+            <li><input type="checkbox" onclick="return false;" checked="" />
         </ol>
     </div>
 </div>`;
