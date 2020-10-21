@@ -88,12 +88,16 @@ if (AUTH_KEY_LENGTH > 10) {
 <html>
     <head>
         <title>WCSBell Setup</title>
+        <link rel="stylesheet" type="text/css" href="/style.css" />
     </head>
     <body>
         <div id="root">
         
         </div>
-        <script src="/setup.js"></script>
+        <script src="/setup.js" type="text/babel"></script>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     </body>
 </html>`)
                 }
