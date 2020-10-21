@@ -7,6 +7,7 @@ const fs = require('fs').promises;
 const express = require('express');
 const enmap = require('enmap');
 const cp = require('cookie-parser');
+const fileUpload = require('express-fileupload')
 
 // Config
 // Only modify this if you know what you are doing!
@@ -49,6 +50,7 @@ if (AUTH_KEY_LENGTH > 10) {
             AUTH_KEY = '0' + AUTH_KEY;
         }
         if (!s) {
+            app.use(fileUpload());
             console.log('');
             console.log('[----- URGENT -----]');
             console.log('You haven\'t set up WCSBell yet!');
