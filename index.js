@@ -105,7 +105,11 @@ if (AUTH_KEY_LENGTH > 10) {
             app.get('/enmap-logo.png', async (req, res) => {
                 let c = await fs.readFile('./enmap-logo.png').catch(() => '');
                 res.end(c);
-            })
+            });
+            app.get('/style.css', async (req, res) => {
+                let c = await fs.readFile('./style.css').catch(() => '/* error reading style */');
+                res.end(c);
+            });
             app.use('/', (req, res) => {
                 res.redirect('/setup');
             });
