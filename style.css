@@ -1,3 +1,20 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.progbar {
+    background-color: lightgray;
+    height: 25px;
+}
+
+.green {
+    background-color: lightgreen;
+    text-align: center;
+    transition: all 1s;
+}
+
+.label {
+    position: relative;
+    top: 3px;
+    padding: 3px;
+}
