@@ -102,6 +102,10 @@ if (AUTH_KEY_LENGTH > 10) {
                 let c = await fs.readFile('./setup.js').catch(() => 'document.body.innerHTML = "error reading script!"');
                 res.end(c);
             });
+            app.get('/enmap-logo.png', async (req, res) => {
+                let c = await fs.readFile('./enmap-logo.png').catch(() => '');
+                res.end(c);
+            })
             app.use('/', (req, res) => {
                 res.redirect('/setup');
             });
