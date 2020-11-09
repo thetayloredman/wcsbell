@@ -17,9 +17,12 @@
 /*            WWW             WWW                  CCCCCCCCCCCCC SSSSSSSSSSSSSSS   BBBBBBBBBBBBBBBBB       eeeeeeeeeeeeee llllllllllllllll*/
 /******************************************************************************************************************************************/
 
-const config = require('./config.js');
-
-// Import config classes
-const Configuration = require('./Configuration.js');
-
-console.log(require('util').inspect(new Configuration(config), undefined, Infinity, true));
+module.exports = class TimeSectorManager extends Map {
+    constructor(timeSectors) {
+        super();
+        for (let item of timeSectors) {
+            const name = item.name;
+            this.set(name, item);
+        }
+    }
+}

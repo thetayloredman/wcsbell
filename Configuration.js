@@ -17,9 +17,10 @@
 /*            WWW             WWW                  CCCCCCCCCCCCC SSSSSSSSSSSSSSS   BBBBBBBBBBBBBBBBB       eeeeeeeeeeeeee llllllllllllllll*/
 /******************************************************************************************************************************************/
 
-const config = require('./config.js');
-
-// Import config classes
-const Configuration = require('./Configuration.js');
-
-console.log(require('util').inspect(new Configuration(config), undefined, Infinity, true));
+module.exports = class Configuration {
+    constructor(data) {
+        this.soundLocations = data.sound_locations;
+        this.sounds = new Map(this.soundLocations.map((data) => [ data.name, data.path ]));
+        this.timeSectors = new (require('./TimeSectorManager.js'))(data.time_sectors);
+    }
+}
