@@ -17,9 +17,43 @@
 /*            WWW             WWW                  CCCCCCCCCCCCC SSSSSSSSSSSSSSS   BBBBBBBBBBBBBBBBB       eeeeeeeeeeeeee llllllllllllllll*/
 /******************************************************************************************************************************************/
 
-const config = require('./config.js');
+const _config = require('./config.js');
+const fs = require('fs');
 
-// Import config classes
-const Configuration = require('./Configuration.js');
+// Read & Init config
+const config = {}
+console.log('Loading config...')
+config.soundLocations = new Map();
+console.log('Loading sound locations...');
+_config.sound_locations.forEach((item) => {
+    console.log('Loading sound location ' + item.name + '...');
+    config.soundLocations.set(item.name, fs.readFileSync(item.path));
+});
+config.timeSectors = new Map();
+console.log('Loading time sectors...');
+_config.time_sectors.forEach((item) => {
+    console.log('Loading time sector ' + item.name + '...');
 
-console.log(require('util').inspect(new Configuration(config), undefined, Infinity, true));
+    config.timeSectors.set(item.name, item);
+});
+console.log('Loaded!');
+
+function check() {
+    console.log('BELLCHECK: Checking for applicable bells...');
+    for (let [name,sector] of Array.from(config.timeSectors.entries())) {
+        console.log('BELLCHECK: Scanning sector ' + sector.name);
+        let checkDate = new Date().valueOf();
+        let startDate = new Date(new Date().getFullYear(), sector.timings.start.month - 1, sector.timings.start.date).valueOf();
+        let endDate = new Date(new Date().getFullYear(), sector.timings.end.month - 1, sector.timings.end.date).valueOf();
+        if (checkDate >= startDate && checkDate <= endDate) {
+            console.log('BELLCHECK: Time sector ' + sector.name + ' applies to current date.');
+            console.log('BELLCHECK: Checking for applicable timecards...')
+        }
+    };
+}
+
+setInterval(check, 60000);
+
+check();
+
+console.log(require('util').inspect(config, void 0, Infinity, true));

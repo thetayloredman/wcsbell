@@ -97,7 +97,7 @@ module.exports = {
                     name: 'Some Timecard',
                     // What days do we trigger this card on?
                     days: {
-                        Sunday: false, // false = off -- true = on
+                        Sunday: false, // false = off & true = on
                         Monday: true,
                         Tuesday: true,
                         Wednesday: true,
