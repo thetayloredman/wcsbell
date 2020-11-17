@@ -40,7 +40,7 @@ console.log('Loaded!');
 
 function check() {
     console.log('BELLCHECK: Checking for applicable bells...');
-    for (let [name,sector] of Array.from(config.timeSectors.entries())) {
+    for (let [, sector] of Array.from(config.timeSectors.entries())) {
         console.log('BELLCHECK: Scanning sector ' + sector.name);
         let checkDate = new Date().valueOf();
         let startDate = new Date(new Date().getFullYear(), sector.timings.start.month - 1, sector.timings.start.date).valueOf();
