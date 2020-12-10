@@ -17,8 +17,9 @@
 /*            WWW             WWW                  CCCCCCCCCCCCC SSSSSSSSSSSSSSS   BBBBBBBBBBBBBBBBB       eeeeeeeeeeeeee llllllllllllllll*/
 /******************************************************************************************************************************************/
 
-const _config = require('./config.js');
 const fs = require('fs');
+const _config = require('jsonc').parse(fs.readFileSync('./config.json', 'utf8'));
+const player = require('play-sound')({ players: ['mplayer'] });
 
 // Read & Init config
 const config = {}
@@ -27,7 +28,7 @@ config.soundLocations = new Map();
 console.log('Loading sound locations...');
 _config.sound_locations.forEach((item) => {
     console.log('Loading sound location ' + item.name + '...');
-    config.soundLocations.set(item.name, fs.readFileSync(item.path));
+    config.soundLocations.set(item.name, item.path);
 });
 config.timeSectors = new Map();
 console.log('Loading time sectors...');
@@ -48,6 +49,37 @@ function check() {
         if (checkDate >= startDate && checkDate <= endDate) {
             console.log('BELLCHECK: Time sector ' + sector.name + ' applies to current date.');
             console.log('BELLCHECK: Checking for applicable timecards...');
+            for (let card of sector.timecards) {
+                let weeks = [];
+                
+                const { days: timings } = card;
+                if (timings.Sunday) weeks.push(0);
+                if (timings.Monday) weeks.push(1);
+                if (timings.Tuesday) weeks.push(2);
+                if (timings.Wednesday) weeks.push(3);
+                if (timings.Thursday) weeks.push(4);
+                if (timings.Friday) weeks.push(5);
+                if (timings.Saturday) weeks.push(6);
+
+                let curday = new Date().getDay();
+                if (weeks.includes(curday)) {
+                    console.log('BELLCHECK: Timecard ' + card.name + ' applies to current date.');
+                    console.log('BELLCHECK: Checking events...');
+                    for (let event of card.events) {
+                        if (new Date().getHours() + 1 === event.timings.hours && new Date().getMinutes() === event.timings.minutes) {
+                            console.log('BELLCHECK: bell applies!');
+
+                            player.play(config.soundLocations.get(timecard.bell_sound), (err) => {
+                                if (err) {
+                                    console.error('FAILED TO READ SOUND FILE!');
+                                    console.error(err);
+                                    process.exit(1);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
         }
     };
 }
@@ -55,5 +87,3 @@ function check() {
 setInterval(check, 60000);
 
 check();
-
-console.log(require('util').inspect(config, void 0, Infinity, true));

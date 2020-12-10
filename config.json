@@ -26,58 +26,61 @@
 // * Paths to sounds
 // * General Configuration
 // * Etc.
-module.exports = {
+{
+    // Use my JSON schema for validation
+    "$schema": "https://badboyhalocat.tk/json-schemas/wcsbell.json",
+
     // ========== SOUND PATHS ==========
     // For WCSBell to run, we need locations of the sounds
     // to use.
     //
     // This config option specifies the locations.
-    sound_locations: [
+    "sound_locations": [
         // This array will contain a list of objects
         // which name the sound.
         {
             // Name of the sound to be referenced
             // later in the config, remember this!
-            name: 'main',
+            "name": "main",
             // Path to the sound, relative to the
             // location you launch WCSBell from.
-            path: './sounds/main.mp3'
+            "path": "./sounds/main.mp3"
         }
         // To add another sound, just add:
         /*
         {
-            name: 'name',
-            path: './sounds/path.mp3'
+            "name": "name",
+            "path": "./sounds/path.mp3"
         }
         */
         // Remember to use commas!
     ],
-    
+
     // ========== TIME SECTORS ==========
     // A time sector is used to indicate
     // a section of time, like summer
     // vs spring etc.
-    time_sectors: [
+    "time_sectors": [
         // This is an example time sector, you
         // may need to modify it to fit your needs.
         {
             // The name of the time sector
-            name: 'Summer',
+            "name": "Summer",
             // The time settings for this sector
-            timings: {
+            "timings": {
                 // When shall this sector start?
-                start: {
+                "start": {
                     // Month code, 1 for january, 12 for december.
-                    month: 6,
+                    "month": 6,
                     // Date to start
-                    date: 20
+                    "date": 20
                 },
                 // And when to end it?
-                end: {
+                "end": {
                     // Month code, 1 for january, 12 for december.
-                    month: 9,
+                    "month": 9,
                     // Date to start
-                    date: 22
+                    "date": 22
                 }
             },
             // Now the biggie.
@@ -88,50 +91,50 @@ module.exports = {
             // For example you could have a Monday card
             // and a Tuesday card, or you could disable
             // weekends, etc.
-            timecards: [
+            "timecards": [
                 // This is an example weekday time card,
                 // you will need to modify it to fit your
                 // needs.
                 {
                     // You can guess what this does by now...
-                    name: 'Some Timecard',
+                    "name": "Some Timecard",
                     // What days do we trigger this card on?
-                    days: {
-                        Sunday: false, // false = off & true = on
-                        Monday: true,
-                        Tuesday: true,
-                        Wednesday: true,
-                        Thursday: true,
-                        Friday: true,
-                        Saturday: false
+                    "days": {
+                        "Sunday": false, // false = off & true = on
+                        "Monday": true,
+                        "Tuesday": true,
+                        "Wednesday": true,
+                        "Thursday": true,
+                        "Friday": true,
+                        "Saturday": false
                     },
 
                     // What bell sound do we use for this timecard?
-                    bell_sound: 'main', // See line 37 for bell sounds
+                    "bell_sound": "main", // See line 37 for bell sounds
 
                     // The most important bit of it all, events.
                     //
                     // Each "event" is the actual time.
                     // Events for this card go here...
-                    events: [
+                    "events": [
                         // Here's a sample set of 2 events.
                         {
                             // The name for the event...
-                            name: 'Math',
+                            "name": "Math",
                             // The timing...
-                            timings: {
+                            "timings": {
                                 // 24 hour time format...
-                                hours: 09, // starting with a 0 is optional.
+                                "hours": 9, // starting with a 0 is optional.
                                 // and minutes
-                                minutes: 00, // same here ^^^
+                                "minutes": 0 // same here ^^^
                                 // ^^^ triggers at 9:00 AM
                             }
                         },
                         {
-                            name: 'Lunch',
-                            timings: {
-                                hours: 12,
-                                minutes: 30
+                            "name": "Lunch",
+                            "timings": {
+                                "hours": 12,
+                                "minutes": 30
                             }
                             // ^^^ triggers at 12:30 PM
                         }

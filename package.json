@@ -1,0 +1,24 @@
+{
+  "name": "wcsbell",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "play-sound": "^1.1.3",
+    "jsonc": "^2.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thetayloredman/wcsbell.git"
+  },
+  "author": "BadBoyHaloCat",
+  "license": "UNLICENCED",
+  "bugs": {
+    "url": "https://github.com/thetayloredman/wcsbell/issues"
+  },
+  "homepage": "https://github.com/thetayloredman/wcsbell#readme"
+}
