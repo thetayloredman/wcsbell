@@ -66,7 +66,7 @@ function check() {
                     console.log('BELLCHECK: Timecard ' + card.name + ' applies to current date.');
                     console.log('BELLCHECK: Checking events...');
                     for (let event of card.events) {
-                        if (new Date().getHours() + 1 === event.timings.hours && new Date().getMinutes() === event.timings.minutes) {
+                        if (new Date().getHours() === event.timings.hours && new Date().getMinutes() === event.timings.minutes) {
                             console.log('BELLCHECK: bell applies!');
 
                             player.play(config.soundLocations.get(timecard.bell_sound), (err) => {
