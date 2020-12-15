@@ -33,6 +33,7 @@ _config.sound_locations.forEach((item) => {
 config.timeSectors = new Map();
 console.log('Loading time sectors...');
 _config.time_sectors.forEach((item) => {
+    // Push the time sector in
     console.log('Loading time sector ' + item.name + '...');
 
     config.timeSectors.set(item.name, item);
@@ -40,18 +41,23 @@ _config.time_sectors.forEach((item) => {
 console.log('Loaded!');
 
 function check() {
+    // Called when a bell event is fired (every minute)
     console.log('BELLCHECK: Checking for applicable bells...');
+    // Loop through each time sector...
     for (let [, sector] of Array.from(config.timeSectors.entries())) {
         console.log('BELLCHECK: Scanning sector ' + sector.name);
+        // Get dates to compare...
         let checkDate = new Date().valueOf();
         let startDate = new Date(new Date().getFullYear(), sector.timings.start.month - 1, sector.timings.start.date).valueOf();
         let endDate = new Date(new Date().getFullYear(), sector.timings.end.month - 1, sector.timings.end.date).valueOf();
+        // compare them...
         if (checkDate >= startDate && checkDate <= endDate) {
             console.log('BELLCHECK: Time sector ' + sector.name + ' applies to current date.');
             console.log('BELLCHECK: Checking for applicable timecards...');
             for (let card of sector.timecards) {
                 let weeks = [];
                 
+                // check if it's a valid day
                 const { days: timings } = card;
                 if (timings.Sunday) weeks.push(0);
                 if (timings.Monday) weeks.push(1);
@@ -65,6 +71,7 @@ function check() {
                 if (weeks.includes(curday)) {
                     console.log('BELLCHECK: Timecard ' + card.name + ' applies to current date.');
                     console.log('BELLCHECK: Checking events...');
+                    // check and play!
                     for (let event of card.events) {
                         if (new Date().getHours() === event.timings.hours && new Date().getMinutes() === event.timings.minutes) {
                             console.log('BELLCHECK: bell applies!');
