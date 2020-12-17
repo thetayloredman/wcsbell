@@ -22,8 +22,8 @@ const _config = require('jsonc').parse(fs.readFileSync('./config.json', 'utf8'))
 const player = require('play-sound')({ players: ['mplayer'] });
 
 // Read & Init config
-const config = {}
-console.log('Loading config...')
+const config = {};
+console.log('Loading config...');
 config.soundLocations = new Map();
 console.log('Loading sound locations...');
 _config.sound_locations.forEach((item) => {
@@ -56,7 +56,7 @@ function check() {
             console.log('BELLCHECK: Checking for applicable timecards...');
             for (let card of sector.timecards) {
                 let weeks = [];
-                
+
                 // check if it's a valid day
                 const { days: timings } = card;
                 if (timings.Sunday) weeks.push(0);
@@ -88,7 +88,7 @@ function check() {
                 }
             }
         }
-    };
+    }
 }
 
 setInterval(check, 60000);
