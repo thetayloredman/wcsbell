@@ -124,7 +124,7 @@
                             // The timing...
                             "timings": {
                                 // 24 hour time format...
-                                "hours": 9, // starting with a 0 is optional.
+                                "hours": 9,
                                 // and minutes
                                 "minutes": 0 // same here ^^^
                                 // ^^^ triggers at 9:00 AM

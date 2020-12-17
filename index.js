@@ -47,28 +47,30 @@ function check() {
     for (let [, sector] of Array.from(config.timeSectors.entries())) {
         console.log('BELLCHECK: Scanning sector ' + sector.name);
         // Get dates to compare...
+        const currentYear = new Date().getFullYear();
+
         let checkDate = new Date().valueOf();
-        let startDate = new Date(new Date().getFullYear(), sector.timings.start.month - 1, sector.timings.start.date).valueOf();
-        let endDate = new Date(new Date().getFullYear(), sector.timings.end.month - 1, sector.timings.end.date).valueOf();
+        let startDate = new Date(currentYear, sector.timings.start.month - 1, sector.timings.start.date).valueOf();
+        let endDate = new Date(currentYear, sector.timings.end.month - 1, sector.timings.end.date).valueOf();
         // compare them...
         if (checkDate >= startDate && checkDate <= endDate) {
             console.log('BELLCHECK: Time sector ' + sector.name + ' applies to current date.');
             console.log('BELLCHECK: Checking for applicable timecards...');
             for (let card of sector.timecards) {
-                let weeks = [];
+                let days = [];
 
                 // check if it's a valid day
                 const { days: timings } = card;
-                if (timings.Sunday) weeks.push(0);
-                if (timings.Monday) weeks.push(1);
-                if (timings.Tuesday) weeks.push(2);
-                if (timings.Wednesday) weeks.push(3);
-                if (timings.Thursday) weeks.push(4);
-                if (timings.Friday) weeks.push(5);
-                if (timings.Saturday) weeks.push(6);
+                if (timings.Sunday) days.push(0);
+                if (timings.Monday) days.push(1);
+                if (timings.Tuesday) days.push(2);
+                if (timings.Wednesday) days.push(3);
+                if (timings.Thursday) days.push(4);
+                if (timings.Friday) days.push(5);
+                if (timings.Saturday) days.push(6);
 
                 let curday = new Date().getDay();
-                if (weeks.includes(curday)) {
+                if (days.includes(curday)) {
                     console.log('BELLCHECK: Timecard ' + card.name + ' applies to current date.');
                     console.log('BELLCHECK: Checking events...');
                     // check and play!
