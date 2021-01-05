@@ -78,7 +78,7 @@ function check() {
                         if (new Date().getHours() === event.timings.hours && new Date().getMinutes() === event.timings.minutes) {
                             console.log('BELLCHECK: bell applies!');
 
-                            player.play(config.soundLocations.get(card.bell_sound), (err) => {
+                            player.play(config.soundLocations.get(event.override_sound || card.bell_sound), (err) => {
                                 if (err) {
                                     console.error('FAILED TO READ SOUND FILE!');
                                     console.error(err);
