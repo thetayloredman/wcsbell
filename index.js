@@ -20,6 +20,7 @@
 const fs = require('fs');
 const _config = require('jsonc').parse(fs.readFileSync('./config.json', 'utf8'));
 const player = require('play-sound')({ players: ['mplayer'] });
+const cron = require('node-cron');
 
 // Read & Init config
 const config = {};
@@ -93,6 +94,4 @@ function check() {
     }
 }
 
-setInterval(check, 60000);
-
-check();
+cron.schedule('* * * * *', check);
