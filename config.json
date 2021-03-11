@@ -36,24 +36,8 @@
     //
     // This config option specifies the locations.
     "sound_locations": [
-        // This array will contain a list of objects
-        // which name the sound.
-        {
-            // Name of the sound to be referenced
-            // later in the config, remember this!
-            "name": "main",
-            // Path to the sound, relative to the
-            // location you launch WCSBell from.
-            "path": "./sounds/main.mp3"
-        }
-        // To add another sound, just add:
-        /*
-        {
-            "name": "name",
-            "path": "./sounds/path.mp3"
-        }
-        */
-        // Remember to use commas!
+        { "name": "pre", "path": "./sounds/6th-and-7th-pre.mp3" },
+        { "name": "main", "path": "./sounds/6th-and-7th.mp3" }
     ],
 
     // ========== TIME SECTORS ==========
@@ -61,44 +45,20 @@
     // a section of time, like summer
     // vs spring etc.
     "time_sectors": [
-        // This is an example time sector, you
-        // may need to modify it to fit your needs.
         {
-            // The name of the time sector
-            "name": "Summer",
-            // The time settings for this sector
-            "timings": {
-                // When shall this sector start?
+            "name": "Main", // removed
+            /*"timings": {
                 "start": {
-                    // Month code, 1 for january, 12 for december.
-                    "month": 6,
-                    // Date to start
-                    "date": 20
+                    "month": 3,
+                    "date": 15
                 },
-                // And when to end it?
                 "end": {
-                    // Month code, 1 for january, 12 for december.
-                    "month": 9,
-                    // Date to start
-                    "date": 22
+                    "month": 12,
+                    "date": 31
                 }
-            },
-            // Now the biggie.
-            // This is the timecards for this sector.
-            // A timecard is a specific day-like card
-            // of bells.
-            //
-            // For example you could have a Monday card
-            // and a Tuesday card, or you could disable
-            // weekends, etc.
-            "timecards": [
-                // This is an example weekday time card,
-                // you will need to modify it to fit your
-                // needs.
+            },*/ "timecards": [
                 {
-                    // You can guess what this does by now...
-                    "name": "Some Timecard",
-                    // What days do we trigger this card on?
+                    "name": "Weekdays",
                     "days": {
                         "Sunday": false, // false = off & true = on
                         "Monday": true,
@@ -108,36 +68,66 @@
                         "Friday": true,
                         "Saturday": false
                     },
-
-                    // What bell sound do we use for this timecard?
-                    "bell_sound": "main", // See line 37 for bell sounds
-
-                    // The most important bit of it all, events.
-                    //
-                    // Each "event" is the actual time.
-                    // Events for this card go here...
+                    "bell_sound": "main",
                     "events": [
-                        // Here's a sample set of 2 events.
                         {
-                            // The name for the event...
-                            "name": "Math",
-                            // The timing...
-                            "timings": {
-                                // 24 hour time format...
-                                "hours": 9,
-                                // and minutes
-                                "minutes": 0 // same here ^^^
-                                // ^^^ triggers at 9:00 AM
-                            }
+                            "_type": "NORM",
+                            "timings": { "hours": 8, "minutes": 0 },
+                            "name": "6-7: C-19_Testing_and_Brunch"
+                        },
+                        { "_type": "NORM", "timings": { "hours": 8, "minutes": 15 }, "name": "6-7: B1" },
+                        { "_type": "BEFR", "timings": { "hours": 8, "minutes": 12 }, "override_sound": "pre", "name": "6-7: B1" },
+                        { "_type": "NORM", "timings": { "hours": 9, "minutes": 15 }, "name": "6-7: B2" },
+                        { "_type": "BEFR", "timings": { "hours": 8, "minutes": 12 }, "override_sound": "pre", "name": "6-7: B2" },
+                        {
+                            "_type": "NORM",
+                            "timings": { "hours": 10, "minutes": 10 },
+
+                            "name": "6-7: Brunch_and_Yard"
+                        },
+                        { "_type": "BEFR", "timings": { "hours": 10, "minutes": 7 }, "override_sound": "pre", "name": "6-7: Brunch_and_Yard" },
+                        { "_type": "NORM", "timings": { "hours": 10, "minutes": 30 }, "name": "6-7: B3" },
+                        { "_type": "BEFR", "timings": { "hours": 10, "minutes": 27 }, "override_sound": "pre", "name": "6-7: B3" },
+                        { "_type": "NORM", "timings": { "hours": 11, "minutes": 30 }, "name": "6-7: B4" },
+                        { "_type": "BEFR", "timings": { "hours": 11, "minutes": 27 }, "override_sound": "pre", "name": "6-7: B4" },
+                        { "_type": "NORM", "timings": { "hours": 12, "minutes": 25 }, "name": "6-7: Lunch_and_Home" },
+                        { "_type": "BEFR", "timings": { "hours": 11, "minutes": 22 }, "override_sound": "pre", "name": "6-7: Lunch_and_Home" },
+                        { "_type": "NORM", "timings": { "hours": 9, "minutes": 0 }, "name": "8-12: B1" },
+                        { "_type": "BEFR", "timings": { "hours": 8, "minutes": 57 }, "override_sound": "pre", "name": "8-12: B1" },
+                        { "_type": "NORM", "timings": { "hours": 10, "minutes": 0 }, "name": "8-12: B2" },
+                        { "_type": "BEFR", "timings": { "hours": 9, "minutes": 57 }, "override_sound": "pre", "name": "8-12: B2" },
+                        { "_type": "NORM", "timings": { "hours": 11, "minutes": 0 }, "name": "8-12: B3" },
+                        { "_type": "BEFR", "timings": { "hours": 10, "minutes": 57 }, "override_sound": "pre", "name": "8-13: B3" },
+                        {
+                            "_type": "NORM",
+                            "timings": { "hours": 11, "minutes": 0 },
+
+                            "name": "8-12: 8th_Grade_Lunch"
                         },
                         {
-                            "name": "Lunch",
-                            "timings": {
-                                "hours": 12,
-                                "minutes": 30
-                            }
-                            // ^^^ triggers at 12:30 PM
-                        }
+                            "_type": "BEFR",
+                            "timings": { "hours": 10, "minutes": 57 },
+                            "override_sound": "pre",
+                            "name": "8-12: 8th_Grade_Lunch"
+                        },
+                        {
+                            "_type": "NORM",
+                            "timings": { "hours": 11, "minutes": 0 },
+
+                            "name": "8-12: High_School_Lunch"
+                        },
+                        {
+                            "_type": "BEFR",
+                            "timings": { "hours": 10, "minutes": 57 },
+                            "override_sound": "pre",
+                            "name": "8-12: High_School_Lunch"
+                        },
+                        { "_type": "NORM", "timings": { "hours": 12, "minutes": 0 }, "name": "8-12: B4" },
+                        { "_type": "BEFR", "timings": { "hours": 11, "minutes": 57 }, "override_sound": "pre", "name": "8-12: B4" },
+                        { "_type": "NORM", "timings": { "hours": 13, "minutes": 0 }, "name": "8-12: B5" },
+                        { "_type": "BEFR", "timings": { "hours": 12, "minutes": 57 }, "override_sound": "pre", "name": "8-12: B5" },
+                        { "_type": "NORM", "timings": { "hours": 14, "minutes": 0 }, "name": "8-12: B6" },
+                        { "_type": "BEFR", "timings": { "hours": 13, "minutes": 57 }, "override_sound": "pre", "name": "8-12: B6" }
                     ]
                 }
             ]

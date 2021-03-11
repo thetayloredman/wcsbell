@@ -54,7 +54,7 @@ function check() {
         let startDate = new Date(currentYear, sector.timings.start.month - 1, sector.timings.start.date).valueOf();
         let endDate = new Date(currentYear, sector.timings.end.month - 1, sector.timings.end.date).valueOf();
         // compare them...
-        if (checkDate >= startDate && checkDate <= endDate) {
+        //if (checkDate >= startDate && checkDate <= endDate) {
             console.log('BELLCHECK: Time sector ' + sector.name + ' applies to current date.');
             console.log('BELLCHECK: Checking for applicable timecards...');
             for (let card of sector.timecards) {
@@ -90,7 +90,7 @@ function check() {
                     }
                 }
             }
-        }
+        //}
     }
 }
 
