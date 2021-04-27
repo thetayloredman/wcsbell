@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>let config = {};</script>
+        <style>
+            .hidden {
+                display: none;
+            }
+            
+            .error {
+            	color: red;
+            }
+            
+            .mono {
+            	font-family: monospace;
+            }
+            
+            #help {
+                border-radius: 10px;
+                border: 1px solid blue;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div id="header">
+            <h1>WCSBell Configuration Editor <sup>version 0.16.6-dev</sup></h1>
+        </div>
+        <div id="welcome" class="hidden stage stage1">
+            <p>Welcome to the WCSBell config editor.</p>
+            <p>Please paste your WCSBell configuration file below (or type <span class="mono">{}</span> for a blank slate):</p>
+            <textarea id="welcome-cfg-in"></textarea>
+            <br />
+            <button onclick="welcomeDone(document.getElementById('welcome-cfg-in').value);">Submit!</button>
+            <p class="hidden error mono" id="json-error">Uhhh... we had an error but we had an error showing the error..?</p>
+        </div>
+        <div id="main" class="hidden stage stage2">
+            <p>Section 2, Electric Bongaloo: Config</p>
+            <p>Now you can edit the configuration!</p>
+            <br />
+            <button onclick="document.getElementById('help').className === 'hidden' ? document.getElementById('help').className = '' : document.getElementById('help').className = 'hidden'">Toggle Help Menu</button>
+            <br />
+            <div id="help" class="hidden">
+                <h3>Help</h3>
+                <p>Definitions:</p>
+                <dl>
+                    <dt>Sound Location</dt>
+                    <dd>Defines a sound and it's file path.
+                    <br />
+                    Example: "<em>Sound <code>bell</code> is in <code>sounds/bell.mp3</code>.</em>"</dd>
+                    
+                    <dt>Time Sector</dt>
+                    <dd>A section of time (e.g. <em>summer</em> or <em>spring</em>)
+                    <br />
+                    <b>Note:</b> A regression in WCSBell prevents the use of time sectors that "end before they start", even if it is intended to have it between years. For example, a time sector "<em>December-January</em>" would never trigger. To fix this, split it into 2 time sectors ("<em>December</em>" and "<em>January</em>")</dd>
+                    
+                    <dt>Timecard</dt>
+                    <dd>Timecards run on <em>days of the week.</em> They are within time sectors.
+                    <br />
+                    For example, you can have a "<em>Weekdays</em>" timecard within the "<em>School Year</em>" time sector.</dd>
+                    
+                    <dt>Event</dt>
+                    <dd>Just a specific bell. Goes inside a timecard.</dd>
+                </dl>
+            </div>
+
+            <div id="update-on-change-parent"><div id="update-on-change"><!-- stub --></div></div>
+        </div>
+        <script>
+            function removeSound(sp) {
+                let index = config.sound_locations.findIndex((val) => val.name === sp.getAttribute('soundname') && val.path === sp.getAttribute('soundpath'));
+                config.sound_locations.splice(index, 1);
+                regenUOC();
+            }
+
+            function newSound() {
+                let slLabel = document.getElementById('sl-new').value;
+                let slp     = document.getElementById('sl-newp').value;
+                config.sound_locations.push({ name: slLabel, path: slp });
+                regenUOC();
+            }
+
+            function regenUOC() {
+                let uocp = document.getElementById('update-on-change-parent');
+                let uoc = document.createElement('div');
+                uoc.id = 'update-on-change';
+
+                // Update 'uoc'
+                uoc.innerHTML = `
+<div id="sound-locations">
+    <h3>Sound Locations</h3>
+    <p>Note: You cannot <em>edit</em> any entries in this page (not just this section). You must delete and recreate them.
+    <p><label>New sound name: <input id="sl-new"></input></label> <br /> <label>New sound path: <input id="sl-newp"></input></label> <br /> <button onclick="newSound()">New</button></p>
+</div>`;
+                let slInner = document.createElement('ul');
+                slInner.id = 'sl-inner';
+                for (let sound of config.sound_locations) {
+                    let newsn = document.createElement('li');
+
+                    // FIXME: malicious code can be injected
+                    newsn.innerHTML = `Sound named ${sound.name} is at path <code>${sound.path}</code> <button onclick="removeSound(this.parentElement)">Remove</button>`;
+                    newsn.setAttribute('soundpath', sound.path);
+                    newsn.setAttribute('soundname', sound.name);
+                    slInner.appendChild(newsn);
+                }
+
+                // TODO: do stuff like 'slInner' for time sectors
+
+                // "Repaint" the uoc element
+                document.getElementById('update-on-change').remove();
+                uoc.appendChild(slInner);
+                uocp.appendChild(uoc);
+            }
+
+            document.getElementById('welcome').className = document.getElementById('welcome').className.replace('hidden', '');
+            function welcomeDone(jsonStr) {
+                try {
+                    JSON.parse(jsonStr);
+                } catch (e) {
+                    document.getElementById('json-error').innerText = `An error occurred parsing the JSON: ${e}`;
+                    document.getElementById('json-error').className = document.getElementById('json-error').className.replace('hidden', '');
+                    
+                    return;
+                }
+                
+                document.getElementById('json-error').className += ' hidden';
+                config = JSON.parse(jsonStr);
+                document.getElementById('welcome').className += ' hidden';
+                bootstrapConfig();
+                startMain();
+            }
+            
+            function bootstrapConfig() {
+            	const cre = (prop, val) => config[prop] ? val : config[prop] = val;
+            	
+            	cre('sound_locations', []);
+            	cre('time_sectors',    []);
+            }
+            
+            function startMain() {
+            	document.getElementById('main').className = document.getElementById('main').className.replace('hidden', '');
+                regenUOC();
+            }
+	    </script>
+    </body>
+</html>
