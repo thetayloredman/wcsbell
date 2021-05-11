@@ -18,79 +18,78 @@
 /******************************************************************************************************************************************/
 
 const fs = require('fs');
-const _config = require('jsonc').parse(fs.readFileSync('./config.json', 'utf8'));
 const player = require('play-sound')({ players: ['mplayer'] });
 const cron = require('node-cron');
+const csv = require('csv-parse/lib/sync');
 
-// Read & Init config
-const config = {};
-console.log('Loading config...');
-config.soundLocations = new Map();
-console.log('Loading sound locations...');
-_config.sound_locations.forEach((item) => {
-    console.log('Loading sound location ' + item.name + '...');
-    config.soundLocations.set(item.name, item.path);
-});
-config.timeSectors = new Map();
-console.log('Loading time sectors...');
-_config.time_sectors.forEach((item) => {
-    // Push the time sector in
-    console.log('Loading time sector ' + item.name + '...');
+// ***** CHANGE ME TO MODIFY THE BEHAVIOR WHEN BELLCHECK FAILS
+// >>>>> Panic when there is an error? (Otherwise, just oops)
+const PANIC_ON_BELLCHECK_FAIL = true;
 
-    config.timeSectors.set(item.name, item);
-});
-console.log('Loaded!');
+const cfg = csv(fs.readFileSync('./config.csv'), { columns: true, skip_empty_lines: true });
+console.log('[INFO] Loaded bells from config.csv.');
+console.log('[INFO] Configuration in use:');
+for (let bell of cfg) {
+    console.log(`[INFO]   Bell ${bell.Name}:`);
+    console.log(`[INFO]     Name:  ${bell.Name}`);
+    console.log(`[INFO]     Sound: ${bell['Sound Filename']}`);
+    console.log(`[INFO]     Time:  ${bell['Time (24-hour)']}`);
+}
+
+function panic(m) {
+    console.error(`*** STOP [${Date.now()}]`);
+    console.error('+++ Crash message:');
+    for (let c of m.split('\n')) {
+        console.error(`>>> ${c}`);
+    }
+    console.error('+++ Backtrace:');
+    console.trace();
+    console.error('*** Aborting (try to reproduce the crash with core dumps enabled if needed)');
+    process.abort();
+}
+function oops(m) {
+    console.log(String.raw` _______
+< Oops! >
+ -------
+        \   ^__^
+         \  (xx)\_______
+            (__)\       )\/\
+             U  ||----w |
+                ||     ||
+`);
+    console.error(`*** Oops! [${Date.now()}]`);
+    console.error('+++ Oops message:');
+    for (let c of m.split('\n')) {
+        console.error(`>>> ${c}`);
+    }
+    console.error('+++ Backtrace:');
+    console.trace();
+}
 
 function check() {
     // Called when a bell event is fired (every minute)
     console.log('BELLCHECK: Checking for applicable bells...');
-    // Loop through each time sector...
-    for (let [, sector] of Array.from(config.timeSectors.entries())) {
-        console.log('BELLCHECK: Scanning sector ' + sector.name);
-        // Get dates to compare...
-        const currentYear = new Date().getFullYear();
+    for (let event of cfg) {
+        let d = new Date();
+        let hours = d.getHours(),
+            mins  = d.getMinutes();
+        let time = event['Time (24-hour)'].split(':');
+        let [isHours, isMins] = time;
+        isHours = parseInt(isHours);
+        isMins  = parseInt(isMins);
+        if (hours === isHours && mins === isMins) {
+            console.log('BELLCHECK: bell ' + event['Name'] + ' applies!');
 
-        let checkDate = new Date().valueOf();
-        let startDate = new Date(currentYear, sector.timings.start.month - 1, sector.timings.start.date).valueOf();
-        let endDate = new Date(currentYear, sector.timings.end.month - 1, sector.timings.end.date).valueOf();
-        // compare them...
-        //if (checkDate >= startDate && checkDate <= endDate) {
-            console.log('BELLCHECK: Time sector ' + sector.name + ' applies to current date.');
-            console.log('BELLCHECK: Checking for applicable timecards...');
-            for (let card of sector.timecards) {
-                let days = [];
-
-                // check if it's a valid day
-                const { days: timings } = card;
-                if (timings.Sunday) days.push(0);
-                if (timings.Monday) days.push(1);
-                if (timings.Tuesday) days.push(2);
-                if (timings.Wednesday) days.push(3);
-                if (timings.Thursday) days.push(4);
-                if (timings.Friday) days.push(5);
-                if (timings.Saturday) days.push(6);
-
-                let curday = new Date().getDay();
-                if (days.includes(curday)) {
-                    console.log('BELLCHECK: Timecard ' + card.name + ' applies to current date.');
-                    console.log('BELLCHECK: Checking events...');
-                    // check and play!
-                    for (let event of card.events) {
-                        if (new Date().getHours() === event.timings.hours && new Date().getMinutes() === event.timings.minutes) {
-                            console.log('BELLCHECK: bell applies!');
-
-                            player.play(config.soundLocations.get(event.override_sound || card.bell_sound), (err) => {
-                                if (err) {
-                                    console.error('FAILED TO READ SOUND FILE!');
-                                    console.error(err);
-                                    process.exit(1);
-                                }
-                            });
-                        }
-                    }
+            player.play(`./sounds/${event['Sound Filename']}`, (err) => {
+                if (err) {
+                    console.error('Errm... that hurt!');
+                    console.error("(Failed to play bell)");
+                    console.error(err);
+                    console.error('*** STOP [BELL_SOUND_PLAY_FAILURE]');
+                    process.exit(1);
                 }
-            }
-        //}
+            });
+        }
     }
 }
 
