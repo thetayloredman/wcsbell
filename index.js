@@ -21,10 +21,13 @@ const fs = require('fs');
 const player = require('play-sound')({ players: ['mplayer'] });
 const cron = require('node-cron');
 const csv = require('csv-parse/lib/sync');
+const { exec } = require('child_process');
 
 // ***** CHANGE ME TO MODIFY THE BEHAVIOR WHEN BELLCHECK FAILS
 // >>>>> Panic when there is an error? (Otherwise, just oops)
-const PANIC_ON_BELLCHECK_FAIL = true;
+const PANIC_ON_BELLCHECK_FAIL = false;
+// >>>>> Run notify-send on bell?
+const NOTIFY_SEND_ON_BELL     = true;
 
 const cfg = csv(fs.readFileSync('./config.csv'), { columns: true, skip_empty_lines: true });
 console.log('[INFO] Loaded bells from config.csv.');
@@ -91,6 +94,9 @@ function check() {
                     }
                 }
             });
+            if (NOTIFY_SEND_ON_BELL) {
+                exec('notify-send "Bell is ringing"');
+            }
         }
     }
 }
