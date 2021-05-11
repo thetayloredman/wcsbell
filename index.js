@@ -82,11 +82,13 @@ function check() {
 
             player.play(`./sounds/${event['Sound Filename']}`, (err) => {
                 if (err) {
-                    console.error('Errm... that hurt!');
-                    console.error("(Failed to play bell)");
+                    console.error('Error playing sound:');
                     console.error(err);
-                    console.error('*** STOP [BELL_SOUND_PLAY_FAILURE]');
-                    process.exit(1);
+                    if (PANIC_ON_BELLCHECK_FAIL) {
+                        panic('Failed to play sound. Does the file exist?');
+                    } else {
+                        oops('Failed to play sound. Does the file exist?');
+                    }
                 }
             });
         }
