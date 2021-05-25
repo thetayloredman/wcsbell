@@ -45,12 +45,13 @@ fi
 [[ -f /etc/systemd/system/wcsbell.service ]] && rm -fv /etc/systemd/system/wcsbell.service
 
 cd /usr/local/lib
-sudo git clone https://github.com/thetayloredman/wcsbell.git
+[[ ! -d wcsbell ]] && sudo git clone https://github.com/thetayloredman/wcsbell.git || { cd wcsbell && sudo git pull; }
 cd wcsbell
 
 sudo ln -svf ../lib/wcsbell/index.js /usr/local/bin/wcsbell
 
 sudo cp wcsbell.service /etc/systemd/system/wcsbell.service
+sudo mkdir /etc/wcsbell
 sudo cp config.csv /etc/wcsbell/config.csv
 sudo systemctl enable wcsbell
 
