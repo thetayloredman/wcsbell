@@ -48,6 +48,8 @@ cd /usr/local/lib
 sudo git clone https://github.com/thetayloredman/wcsbell.git
 cd wcsbell
 
+sudo ln -svf ../lib/wcsbell/index.js /usr/local/bin/wcsbell
+
 sudo cp wcsbell.service /etc/systemd/system/wcsbell.service
 sudo cp config.csv /etc/wcsbell/config.csv
 sudo systemctl enable wcsbell
