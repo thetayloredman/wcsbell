@@ -48,6 +48,8 @@ cd /usr/local/lib
 [[ ! -d wcsbell ]] && sudo git clone https://github.com/thetayloredman/wcsbell.git || { cd wcsbell && sudo git pull; }
 cd wcsbell
 
+sudo npm install
+
 sudo ln -svf ../lib/wcsbell/index.js /usr/local/bin/wcsbell
 
 sudo cp wcsbell.service /etc/systemd/system/wcsbell.service
