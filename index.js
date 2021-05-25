@@ -29,7 +29,7 @@ const PANIC_ON_BELLCHECK_FAIL = false;
 // >>>>> Run notify-send on bell?
 const NOTIFY_SEND_ON_BELL     = true;
 
-const cfg = csv(fs.readFileSync('./config.csv'), { columns: true, skip_empty_lines: true });
+const cfg = csv(fs.readFileSync(process.env.CONFIG_FILE || './config.csv'), { columns: true, skip_empty_lines: true });
 console.log('[INFO] Loaded bells from config.csv.');
 console.log('[INFO] Configuration in use:');
 for (let bell of cfg) {
