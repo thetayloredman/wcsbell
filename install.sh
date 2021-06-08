@@ -53,7 +53,8 @@ sudo npm install
 sudo ln -svf ../lib/wcsbell/index.js /usr/local/bin/wcsbell
 sudo chmod +x /usr/local/lib/wcsbell/index.js
 
-sudo cp wcsbell.service /etc/systemd/system/wcsbell.service
+[[ ! -d ~/.config/systemd/user ]] && mkdir -p ~/.config/systemd/user
+cp wcsbell.service ~/.config/systemd/user/wcsbell.service
 [[ ! -d /etc/wcsbell ]] && sudo mkdir /etc/wcsbell
 [[ ! -f /etc/wcsbell/config.csv ]] && sudo cp config.csv /etc/wcsbell/config.csv
 systemctl --user enable wcsbell
