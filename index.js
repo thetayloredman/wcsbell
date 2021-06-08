@@ -84,7 +84,7 @@ function check() {
         if (hours === isHours && mins === isMins) {
             console.log('BELLCHECK: bell ' + event['Name'] + ' applies!');
 
-            player.play(`./sounds/${event['Sound Filename']}`, (err) => {
+            player.play(`${process.env.SOUND_DIR || './sounds'}/${event['Sound Filename']}`, (err) => {
                 if (err) {
                     console.error('Error playing sound:');
                     console.error(err);
