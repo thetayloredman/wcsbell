@@ -3,8 +3,9 @@ Description=WCSBell Daemon
 After=multi-user.target
 
 [Service]
-Environment=CONFIG_FILE=/etc/wcsbell/config.csv
-ExecStart=/usr/local/bin/wcsbell
+Environment=CONFIG_FILE=.config/wcsbell/config.csv
+Environment=SOUND_DIR=.config/wcsbell/sounds/
+ExecStart=%h/.local/bin/wcsbell
 
 [Install]
 WantedBy=default.target

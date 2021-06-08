@@ -19,7 +19,8 @@ echo ">>> READ CAREFULLY."
 [[ "$install_node" -eq 1 ]] && echo "The NodeSource repository will be added to sources.list."
 [[ "$install_node" -eq 1 ]] && echo "Node.js will be installed (apt-get install nodejs)"
 [[ "$install_mplayer" -eq 1 ]] && echo "mplayer will be installed (apt-get install mplayer)."
-[[ -f /etc/systemd/system/wcsbell.service ]] && echo "The systemd service will be removed (for upgrade)"
+[[ -f /etc/systemd/system/wcsbell.service ]] && echo "The LEGACY systemd service will be removed (for upgrade)"
+[[ -f ~/.config/systemd/user/wcsbell.service ]] && echo "The systemd service will be removed (for upgrade)"
 echo "The WCSBell sources will be installed/upgraded."
 echo "The systemd service will be installed."
 printf ">>> Do you want to continue? [y/N] "
@@ -43,22 +44,24 @@ fi
 [[ "$install_mplayer" -eq 1 ]] && sudo apt install mplayer -y
 
 [[ -f /etc/systemd/system/wcsbell.service ]] && sudo rm -fv /etc/systemd/system/wcsbell.service
+[[ -f ~/.config/systemd/user/wcsbell.service ]] && rm -fv ~/.config/systemd/user/wcsbell.service
 
-cd /usr/local/lib
-[[ ! -d wcsbell ]] && sudo git clone https://github.com/thetayloredman/wcsbell.git || { cd wcsbell && sudo git pull; }
-cd /usr/local/lib/wcsbell
+cd ~/.local/lib
+[[ ! -d wcsbell ]] && git clone https://github.com/thetayloredman/wcsbell.git || { cd wcsbell && git pull; }
+cd ~/.local/lib/wcsbell
 
-sudo npm install
+npm install
 
-sudo ln -svf ../lib/wcsbell/index.js /usr/local/bin/wcsbell
-sudo chmod +x /usr/local/lib/wcsbell/index.js
+ln -svf ../lib/wcsbell/index.js ~/.local/bin/wcsbell
+chmod +x ~/.local/lib/wcsbell/index.js
 
 [[ ! -d ~/.config/systemd/user ]] && mkdir -p ~/.config/systemd/user
 cp wcsbell.service ~/.config/systemd/user/wcsbell.service
-[[ ! -d /etc/wcsbell ]] && sudo mkdir /etc/wcsbell
-[[ ! -f /etc/wcsbell/config.csv ]] && sudo cp config.csv /etc/wcsbell/config.csv
+[[ ! -d ~/.config/wcsbell ]] && mkdir ~/.config/wcsbell
+[[ ! -f ~/.config/wcsbell/config.csv ]] && cp config.csv ~/.config/wcsbell/config.csv
+[[ ! -d ~/.config/wcsbell/sounds ]] && mkdir ~/.config/wcsbell/sounds
 systemctl --user enable wcsbell
 systemctl --user start wcsbell
 
 echo "Done. WCSBell should now be running."
-echo "Install sounds in /usr/local/lib/wcsbell/sounds."
+echo "Install sounds in ~/.config/wcsbell/sounds."
