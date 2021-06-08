@@ -7,5 +7,5 @@ Environment=CONFIG_FILE=/etc/wcsbell/config.csv
 ExecStart=/usr/local/bin/wcsbell
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 

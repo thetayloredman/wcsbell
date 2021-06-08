@@ -56,7 +56,8 @@ sudo chmod +x /usr/local/lib/wcsbell/index.js
 sudo cp wcsbell.service /etc/systemd/system/wcsbell.service
 [[ ! -d /etc/wcsbell ]] && sudo mkdir /etc/wcsbell
 [[ ! -f /etc/wcsbell/config.csv ]] && sudo cp config.csv /etc/wcsbell/config.csv
-sudo systemctl enable wcsbell
+systemctl --user enable wcsbell
+systemctl --user start wcsbell
 
-echo "Done. Reboot your system."
+echo "Done. WCSBell should now be running."
 echo "Install sounds in /usr/local/lib/wcsbell/sounds."

@@ -103,3 +103,4 @@ function check() {
 }
 
 cron.schedule('* * * * *', check);
+check(); // for debugging
