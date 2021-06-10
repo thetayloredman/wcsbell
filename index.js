@@ -30,8 +30,13 @@ const PANIC_ON_BELLCHECK_FAIL = false;
 // >>>>> Run notify-send on bell?
 const NOTIFY_SEND_ON_BELL     = true;
 
-const cfg = csv(fs.readFileSync(process.env.CONFIG_FILE || './config.csv'), { columns: true, skip_empty_lines: true });
-console.log(`[INFO] Loaded bells from ${process.env.CONFIG_FILE || './config.csv'}.`);
+const configPath = process.env.CONFIG_FILE || './config.csv';
+
+const cfg = csv(
+    fs.readFileSync(configPath),
+    { columns: true, skip_empty_lines: true }
+);
+console.log(`[INFO] Loaded bells from ${configPath}.`);
 console.log('[INFO] Configuration in use:');
 for (let bell of cfg) {
     console.log(`[INFO]   Bell ${bell.Name}:`);
@@ -43,45 +48,31 @@ for (let bell of cfg) {
 function panic(m) {
     console.error(`*** STOP [${Date.now()}]`);
     console.error('+++ Crash message:');
-    for (let c of m.split('\n')) {
-        console.error(`>>> ${c}`);
-    }
+    console.error(`>>> ${c}`);
     console.error('+++ Backtrace:');
     console.trace();
     console.error('*** Aborting (try to reproduce the crash with core dumps enabled if needed)');
     process.abort();
 }
 function oops(m) {
-    console.log(String.raw` _______
-< Oops! >
- -------
-        \   ^__^
-         \  (xx)\_______
-            (__)\       )\/\
-             U  ||----w |
-                ||     ||
-`);
     console.error(`*** Oops! [${Date.now()}]`);
     console.error('+++ Oops message:');
-    for (let c of m.split('\n')) {
-        console.error(`>>> ${c}`);
-    }
+    console.error(`>>> ${c}`);
     console.error('+++ Backtrace:');
     console.trace();
 }
 
 function check() {
     // Called when a bell event is fired (every minute)
-    console.log('BELLCHECK: Checking for applicable bells...');
     for (let event of cfg) {
-        let d = new Date();
-        let hours = d.getHours(),
-            mins  = d.getMinutes();
-        let time = event['Time (24-hour)'].split(':');
-        let [isHours, isMins] = time;
-        isHours = parseInt(isHours);
-        isMins  = parseInt(isMins);
-        if (hours === isHours && mins === isMins) {
+        let currentDate = new Date();
+        let hour        = currentDate.getHours();
+        let min         = currentDate.getMinutes();
+        let time        = event['Time (24-hour)'].split(':');
+        let [targetHour, targetMinute] = time.map(x => parseInt(x));
+        targetHour      = parseInt(targetHour);
+        targetMinute    = parseInt(targetMinute);
+        if (min === targetHour && mins === targetMinute) {
             console.log('BELLCHECK: bell ' + event['Name'] + ' applies!');
 
             player.play(`${process.env.SOUND_DIR || './sounds'}/${event['Sound Filename']}`, (err) => {
